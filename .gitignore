@@ -1,4 +1,5 @@
 # Directories
 .idea/
+__pycache__/
 
 # Files
