@@ -3,10 +3,10 @@ A Reinforcement Learning environment which is based on a sheep eating grass logi
 
 ### Quick Start Guide   
 $conda env create -f environment.yml   
-$conda activate wolf_env
+$conda activate sheep_env
 
 If using pycharm, set the interpreter to the python version in the created conda env e.g.:   
-.../anaconda3/envs/wolf_env/bin/python   
+.../anaconda3/envs/sheep_env/bin/python
 
 ### Used Sources/Dependencies
 TBD
