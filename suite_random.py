@@ -8,13 +8,13 @@ def main():
     print("Random Testing Suite Started...")
 
     # Create Environment
-    env = environment.Environment("data/reduced_height_map.jpg", 15, 100)
+    env = environment.Environment("data/map_small.jpg", 15, 100, 10)
 
     # Reset Environment
     env.reset()
 
     # Loop Environment
-    while True:
+    while not env.game_over:
 
         # Render map and sub-map
         env.render_map()
@@ -29,7 +29,9 @@ def main():
 
         print("reward: {}".format(reward),
               "total reward: {}".format(env.agent_reward),
-              "game_over: {}".format(game_over))
+              "game_over: {}".format(game_over),
+              "total_reward: {}".format(env.total_generated_rewards)
+              )
 
 
 if __name__ == '__main__':

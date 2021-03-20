@@ -5,7 +5,7 @@ import cv2
 class Environment:
 
     # Initialize environment and sets agent to random location (s0, a0)
-    def __init__(self, map_img_path, fov, food_spawn_threshold):
+    def __init__(self, map_img_path, fov, food_spawn_threshold, percent_for_game_over):
         # Private input variables
         self.map_img_path = map_img_path
         self.fov = fov
@@ -25,6 +25,8 @@ class Environment:
         self.game_over = False
         self.reward_value = 1
         self.step_cost = 0
+        self.percent_for_game_over = percent_for_game_over
+        self.number_for_game_over = 0
 
         self.init_map()  # s0
         self.init_agent_pos()  # a0
@@ -69,6 +71,8 @@ class Environment:
                     self.map_img_agents[i, j, 2] = 0
                     # Increment the number of rewards counter
                     self.total_generated_rewards += 1
+
+        self.number_for_game_over = self.total_generated_rewards * (self.percent_for_game_over / 100)
 
     # Reset Function
     def reset(self):
@@ -191,8 +195,8 @@ class Environment:
             self.calculate_current_reward(1, 1)
             self.movement_decision(1, 1)
 
-        # Check if all rewards have been found, if yes set done to true
-        if self.total_generated_rewards <= self.agent_reward:
+        # Check if number of rewards found is greater then needed for game over
+        if self.number_for_game_over <= self.agent_reward:
             self.game_over = True
 
         # Crop the sub-map from the map

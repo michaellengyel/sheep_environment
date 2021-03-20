@@ -5,16 +5,16 @@ import cv2
 def main():
 
     print("Manual Testing Started...")
-    print("Use Keys W, A, D, X, Q, R, Z, C to navigate.")
+    print("Use Keys W, A, D, X(Y), Q, R, Z, C to navigate.")
 
     # Create Environment
-    env = environment.Environment("data/reduced_height_map.jpg", 15, 100)
+    env = environment.Environment("data/map_small.jpg", 15, 100, 10)
 
     # Reset Environment
     env.reset()
 
     # Loop Environment
-    while True:
+    while not env.game_over:
 
         # Render map and sub-map
         env.render_map()
@@ -29,7 +29,7 @@ def main():
         elif key == ord('w'):
             action = 0
             movement += "UP"
-        elif key == ord('x'):
+        elif key == ord('x') or key == ord('y'):
             action = 1
             movement += "DOWN"
         elif key == ord('a'):
