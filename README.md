@@ -11,6 +11,8 @@ If using pycharm, set the interpreter to the python version in the created conda
 
 .../anaconda3/envs/sheep_env/bin/python
 
+There are two ways to test the environment. Run the "suite_manual.py" file to test manually or run "suite_random.py" to test random behaviour.   
+
 ### Used Sources/Dependencies
 TBD
 
