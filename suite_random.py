@@ -1,4 +1,4 @@
-import environment
+from environment import Environment
 import cv2
 import random
 
@@ -8,7 +8,7 @@ def main():
     print("Random Testing Suite Started...")
 
     # Create Environment
-    env = environment.Environment("data/map_small.jpg", 15, 100, 10)
+    env = Environment("data/map_small.jpg", 15, 100, 10)
 
     # Reset Environment
     env.reset()
