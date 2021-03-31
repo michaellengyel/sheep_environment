@@ -1,10 +1,17 @@
 name: sheep_env
 channels:
+  #- anaconda
   - conda-forge
+  #- defaults
 dependencies:
   - opencv
   - numpy
   - matplotlib
   - pandas
   - tensorflow-gpu==1.13.1
-  - scikit-image
+  - keras
+  - tqdm
+  #- pip
+  #- pip:
+  #    - tqdm
+  # - scikit-image

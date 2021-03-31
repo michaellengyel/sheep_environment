@@ -88,6 +88,9 @@ class Environment:
 
     '''Getter Function'''
 
+    def get_action_space_size(self):
+        return 8
+
     '''Debug Helper Functions'''
 
     # Might need to make a torch.tensor from the numpy array

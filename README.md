@@ -17,7 +17,14 @@ When adding or removing a dependency from the environment.yml list, run:
 $ conda env update --file environment.yml
 
 ### Used Sources/Dependencies
-TBD
+
+#### Machine Learning with Phil
+https://www.youtube.com/watch?v=5fHngyN8Qhw
+
+#### sentdex
+https://pythonprogramming.net/deep-q-learning-dqn-reinforcement-learning-python-tutorial/
+https://www.youtube.com/watch?v=t3fbETsIBCY  
+https://www.youtube.com/watch?v=qfovbG84EBg
 
 ### System Dependencies 
 TBD
