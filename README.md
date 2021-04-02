@@ -31,3 +31,7 @@ https://www.youtube.com/watch?v=qfovbG84EBg
 
 ### System Dependencies 
 TBD
+
+### TODO:
+(Solve the loading of models by adding h5py to environment.yml)
+pip install tensorflow h5py==2.10.0

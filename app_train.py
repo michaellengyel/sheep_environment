@@ -1,4 +1,4 @@
-from keras.models import Sequential
+from keras.models import Sequential, load_model
 from keras.layers import Dense, Dropout, Conv2D, MaxPooling2D, Activation, Flatten
 from keras.optimizers import Adam
 from keras.callbacks import TensorBoard
@@ -82,6 +82,7 @@ class DQNAgent:
         self.env = env
 
     def create_model(self, env):
+
         model = Sequential()
 
         model.add(Conv2D(256, (3, 3), input_shape=np.zeros((15, 15, 3)).shape))
@@ -158,17 +159,22 @@ def main():
     EPSILON_DECAY = 0.99975
     MIN_EPSILON = 0.001
 
-    print("Running App...")
+    print("Running Training App...")
 
     # For stats
     ep_rewards = [-200]
+
+    # For more repetitive results
+    # random.seed(1)
+    # np.random.seed(1)
+    # tf.set_random_seed(1)
 
     # Create models folder
     if not os.path.isdir("models"):
         os.mkdir("models")
 
     # Create Environment
-    env = Environment("data/map_small.jpg", 15, 100, 10)
+    env = Environment("data/map_small.jpg", 15, 100, 1)
 
     agent = DQNAgent(env)
 
@@ -190,7 +196,7 @@ def main():
             new_state, reward, done = env.step(action)
             episode_reward += reward
 
-            if SHOW_PREVIEW and not episode % AGGREGATE_STATS_EVERY:
+            if SHOW_PREVIEW and not episode % 1:
                 env.render_map()
                 env.render_sub_map()
 

@@ -81,6 +81,10 @@ class Environment:
         self.init_agent_pos()
         self.init_map()
 
+        self.agent_reward = 0
+        self.agent_current_reward = 0
+        self.game_over = False
+
         self.sub_map_img = self.map_img_agents[self.agent_x - self.offset:self.agent_x + self.offset + 1,
                            self.agent_y - self.offset:self.agent_y + self.offset + 1, :]
 
@@ -108,10 +112,12 @@ class Environment:
 
     def render_map(self):
         cv2.imshow('MAP', self.map_img_agents)
+        cv2.waitKey(1)
 
     # Render the map of the environment each tick
     def render_sub_map(self):
         cv2.imshow('SUBMAP', self.sub_map_img)
+        cv2.waitKey(1)
 
     '''Environment Logic Functions'''
 
