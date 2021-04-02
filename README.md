@@ -13,8 +13,11 @@ If using pycharm, set the interpreter to the python version in the created conda
 
 There are two ways to test the environment. Run the "suite_manual.py" file to test manually or run "suite_random.py" to test random behaviour.   
 
-When adding or removing a dependency from the environment.yml list, run:
+When adding or removing a dependency from the environment.yml list, run:  
 $ conda env update --file environment.yml
+
+To run Tensorboard enter:  
+$ tensorboard --logdir=/path/to/output/logs/folder/
 
 ### Used Sources/Dependencies
 
