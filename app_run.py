@@ -16,7 +16,7 @@ import time
 import os
 
 
-LOAD_MODEL = "models/2x256_____1.00max____0.24avg____0.00min__1617230751.model"
+LOAD_MODEL = "models/2x256___874.00max__440.44avg_-176.00min__1617462987.model"
 
 DISCOUNT = 0.99
 REPLAY_MEMORY_SIZE = 50_000  # How many last steps to keep for model training
@@ -114,8 +114,7 @@ class DQNAgent:
             X.append(current_state)
             y.append(current_qs)
 
-        self.model.fit(np.array(X) / 255, np.array(y), batch_size=MINIBATCH_SIZE, verbose=0, shuffle=False,
-                       callbacks=[self.tensorboard] if terminal_state else None)
+        self.model.fit(np.array(X) / 255, np.array(y), batch_size=MINIBATCH_SIZE, verbose=0, shuffle=False)
 
         # Updating to determine if we want to update target_model yet
         if terminal_state:
@@ -148,7 +147,7 @@ def main():
         os.mkdir("models")
 
     # Create Environment
-    env = Environment("data/map_small.jpg", 15, 100, 10)
+    env = Environment("data/map_small_edge.jpg", 15, 100, 100, 200)
 
     agent = DQNAgent(env)
 
@@ -173,11 +172,17 @@ def main():
                 env.render_map()
                 env.render_sub_map()
 
-            agent.update_replay_memory((current_state, action, reward, new_state, done))
-            agent.train(done, step)
+            #agent.update_replay_memory((current_state, action, reward, new_state, done))
+            #agent.train(done, step)
 
             current_state = new_state
             step += 1
+
+        print("reward: {}".format(reward),
+              "total reward: {}".format(env.agent_reward),
+              "game_over: {}".format(done),
+              "total_gen_reward: {}".format(env.total_generated_rewards)
+              )
 
 
 if __name__ == '__main__':

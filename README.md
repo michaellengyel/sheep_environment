@@ -18,6 +18,8 @@ $ conda env update --file environment.yml
 
 To run Tensorboard enter:  
 $ tensorboard --logdir=/path/to/output/logs/folder/
+or   
+$ tensorboard --logdir logs
 
 ### Used Sources/Dependencies
 

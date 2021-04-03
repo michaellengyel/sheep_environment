@@ -5,7 +5,7 @@ import cv2
 class Environment:
 
     # Initialize environment and sets agent to random location (s0, a0)
-    def __init__(self, map_img_path, fov, food_spawn_threshold, percent_for_game_over):
+    def __init__(self, map_img_path, fov, food_spawn_threshold, percent_for_game_over, steps_for_game_over):
         # Private input variables
         self.map_img_path = map_img_path
         self.fov = fov
@@ -23,10 +23,12 @@ class Environment:
         self.agent_current_reward = 0
         self.total_generated_rewards = 0
         self.game_over = False
-        self.reward_value = 1
-        self.step_cost = 0
+        self.reward_value = 5
+        self.step_cost = -1
+        self.steps = 0
         self.percent_for_game_over = percent_for_game_over
         self.number_for_game_over = 0
+        self.steps_for_game_over = steps_for_game_over
 
         self.init_map()  # s0
         self.init_agent_pos()  # a0
@@ -78,12 +80,16 @@ class Environment:
     def reset(self):
         self.map_img_agents = self.load_map()
         self.map_img_calculations = self.load_map()
+
+        self.total_generated_rewards = 0
+
         self.init_agent_pos()
         self.init_map()
 
         self.agent_reward = 0
         self.agent_current_reward = 0
         self.game_over = False
+        self.steps = 0
 
         self.sub_map_img = self.map_img_agents[self.agent_x - self.offset:self.agent_x + self.offset + 1,
                            self.agent_y - self.offset:self.agent_y + self.offset + 1, :]
@@ -117,16 +123,16 @@ class Environment:
     # Render the map of the environment each tick
     def render_sub_map(self):
         cv2.imshow('SUBMAP', self.sub_map_img)
-        cv2.waitKey(1)
+        cv2.waitKey(30)
 
     '''Environment Logic Functions'''
 
     def movement_decision(self, x, y):
 
-        lower_inside_bounds_x = ((self.agent_x + x) > self.offset)
-        lower_inside_bounds_y = ((self.agent_y + y) > self.offset)
-        upper_inside_bounds_x = ((self.agent_x + x) < self.env_width - self.offset)
-        upper_inside_bounds_y = ((self.agent_y + y) < self.env_height - self.offset)
+        lower_inside_bounds_x = ((self.agent_x + x) >= self.offset)
+        lower_inside_bounds_y = ((self.agent_y + y) >= self.offset)
+        upper_inside_bounds_x = ((self.agent_x + x) <= self.env_width - self.offset)
+        upper_inside_bounds_y = ((self.agent_y + y) <= self.env_height - self.offset)
 
         is_within_bounds = lower_inside_bounds_x & lower_inside_bounds_y & upper_inside_bounds_x & upper_inside_bounds_y
 
@@ -204,8 +210,14 @@ class Environment:
             self.calculate_current_reward(1, 1)
             self.movement_decision(1, 1)
 
+        self.steps += 1
+
         # Check if number of rewards found is greater then needed for game over
         if self.number_for_game_over <= self.agent_reward:
+            self.agent_reward += 30
+            self.game_over = True
+
+        if self.steps >= self.steps_for_game_over:
             self.game_over = True
 
         # Crop the sub-map from the map
