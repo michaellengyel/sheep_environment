@@ -80,9 +80,6 @@ class Environment:
     def reset(self):
         self.map_img_agents = self.load_map()
         self.map_img_calculations = self.load_map()
-
-        self.total_generated_rewards = 0
-
         self.init_agent_pos()
         self.init_map()
 
@@ -123,7 +120,7 @@ class Environment:
     # Render the map of the environment each tick
     def render_sub_map(self):
         cv2.imshow('SUBMAP', self.sub_map_img)
-        cv2.waitKey(30)
+        cv2.waitKey(1)
 
     '''Environment Logic Functions'''
 
@@ -131,8 +128,8 @@ class Environment:
 
         lower_inside_bounds_x = ((self.agent_x + x) >= self.offset)
         lower_inside_bounds_y = ((self.agent_y + y) >= self.offset)
-        upper_inside_bounds_x = ((self.agent_x + x) <= self.env_width - self.offset)
-        upper_inside_bounds_y = ((self.agent_y + y) <= self.env_height - self.offset)
+        upper_inside_bounds_x = ((self.agent_x + x) < self.env_width - self.offset)
+        upper_inside_bounds_y = ((self.agent_y + y) < self.env_height - self.offset)
 
         is_within_bounds = lower_inside_bounds_x & lower_inside_bounds_y & upper_inside_bounds_x & upper_inside_bounds_y
 

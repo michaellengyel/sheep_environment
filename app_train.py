@@ -29,7 +29,7 @@ EPISODES = 1000
 
 #  Stats settings
 AGGREGATE_STATS_EVERY = 50  # episodes
-SHOW_PREVIEW = False
+SHOW_PREVIEW = True
 
 
 # Own Tensorboard class
@@ -99,7 +99,7 @@ class DQNAgent:
         model.add(Dense(64))
 
         model.add(Dense(env.get_action_space_size(), activation="linear"))
-        model.compile(loss="mse", optimizer=Adam(lr=0.000005), metrics=['accuracy'])
+        model.compile(loss="mse", optimizer=Adam(lr=0.00001), metrics=['accuracy'])
 
         return model
 
