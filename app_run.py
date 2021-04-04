@@ -15,7 +15,6 @@ import random
 import time
 import os
 
-
 LOAD_MODEL = "models/2x256___874.00max__440.44avg_-176.00min__1617462987.model"
 
 DISCOUNT = 0.99

@@ -28,7 +28,7 @@ MEMORY_FRACTION = 0.20
 EPISODES = 1000
 
 #  Stats settings
-AGGREGATE_STATS_EVERY = 50  # episodes
+AGGREGATE_STATS_EVERY = 25  # episodes
 SHOW_PREVIEW = True
 
 
@@ -154,6 +154,8 @@ class DQNAgent:
 
 def main():
 
+    sess = tf.Session(config=tf.ConfigProto(log_device_placement=True))
+
     # Exploration settings
     epsilon = 1  # not a constant, going to be decayed
     EPSILON_DECAY = 0.9975
@@ -174,7 +176,7 @@ def main():
         os.mkdir("models")
 
     # Create Environment
-    env = Environment("data/map_small_edge.jpg", 15, 100, 1, 200)
+    env = Environment("data/map_small_edge.jpg", 15, 100, 1, 100)
 
     agent = DQNAgent(env)
 
