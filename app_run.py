@@ -15,7 +15,7 @@ import random
 import time
 import os
 
-LOAD_MODEL = "models/2x256___874.00max__440.44avg_-176.00min__1617462987.model"
+LOAD_MODEL = "models/2x256____28.00max__-18.56avg__-50.00min__1617621913.model"
 
 DISCOUNT = 0.99
 REPLAY_MEMORY_SIZE = 50_000  # How many last steps to keep for model training

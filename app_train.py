@@ -16,7 +16,7 @@ import time
 import os
 
 DISCOUNT = 0.99
-REPLAY_MEMORY_SIZE = 50000  # How many last steps to keep for model training
+REPLAY_MEMORY_SIZE = 1000  # How many last steps to keep for model training
 MIN_REPLAY_MEMORY_SIZE = 1000  # Minimum number of steps in a memory to start training
 MINIBATCH_SIZE = 64  # How many steps (samples) to use for training
 UPDATE_TARGET_EVERY = 5  # Terminal states (end of episodes)
@@ -25,7 +25,7 @@ MIN_REWARD = -200  # For model save
 MEMORY_FRACTION = 0.20
 
 # Environment settings
-EPISODES = 1000
+EPISODES = 5000
 
 #  Stats settings
 AGGREGATE_STATS_EVERY = 25  # episodes
@@ -158,7 +158,7 @@ def main():
 
     # Exploration settings
     epsilon = 1  # not a constant, going to be decayed
-    EPSILON_DECAY = 0.9975
+    EPSILON_DECAY = 0.99975
     MIN_EPSILON = 0.001
 
     print("Running Training App...")
@@ -176,7 +176,7 @@ def main():
         os.mkdir("models")
 
     # Create Environment
-    env = Environment("data/map_small_edge.jpg", 15, 100, 1, 100)
+    env = Environment("data/map_small_edge.jpg", 15, 100, 1, 50)
 
     agent = DQNAgent(env)
 

@@ -80,13 +80,15 @@ class Environment:
     def reset(self):
         self.map_img_agents = self.load_map()
         self.map_img_calculations = self.load_map()
-        self.init_agent_pos()
-        self.init_map()
 
         self.agent_reward = 0
         self.agent_current_reward = 0
+        self.total_generated_rewards = 0
         self.game_over = False
         self.steps = 0
+
+        self.init_agent_pos()
+        self.init_map()
 
         self.sub_map_img = self.map_img_agents[self.agent_x - self.offset:self.agent_x + self.offset + 1,
                            self.agent_y - self.offset:self.agent_y + self.offset + 1, :]
