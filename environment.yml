@@ -10,8 +10,9 @@ dependencies:
   - numpy
   - matplotlib
   - pandas
-  - tensorflow-gpu==1.13.1
-  - keras
+  - tensorflow-gpu==1.15
+  - keras-gpu
+  - blas
   - tqdm
   - h5py==2.10.0
   #- pip
