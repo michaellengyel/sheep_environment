@@ -15,7 +15,7 @@ import random
 import time
 import os
 
-LOAD_MODEL = "models/2x256____28.00max__-18.56avg__-50.00min__1617621913.model"
+LOAD_MODEL = "models/2x256_____9.62max____6.80avg____3.48min__1621161884.model"
 
 DISCOUNT = 0.99
 REPLAY_MEMORY_SIZE = 50_000  # How many last steps to keep for model training
@@ -23,7 +23,7 @@ MIN_REPLAY_MEMORY_SIZE = 1_000  # Minimum number of steps in a memory to start t
 MINIBATCH_SIZE = 64  # How many steps (samples) to use for training
 UPDATE_TARGET_EVERY = 5  # Terminal states (end of episodes)
 MODEL_NAME = '2x256'
-MIN_REWARD = -200  # For model save
+MIN_REWARD = 0  # For model save
 MEMORY_FRACTION = 0.20
 
 # Environment settings
@@ -54,27 +54,10 @@ class DQNAgent:
             print(f"Loading {LOAD_MODEL}")
             model = load_model(LOAD_MODEL)
             print(f"Model {LOAD_MODEL} loaded!")
+            return model
 
         else:
-            model = Sequential()
-
-            model.add(Conv2D(256, (3, 3), input_shape=np.zeros((15, 15, 3)).shape))
-            model.add(Activation("relu"))
-            model.add(MaxPooling2D(2, 2))
-            model.add(Dropout(0.2))
-
-            model.add(Conv2D(256, (3, 3)))
-            model.add(Activation("relu"))
-            model.add(MaxPooling2D(2, 2))
-            model.add(Dropout(0.2))
-
-            model.add(Flatten())
-            model.add(Dense(64))
-
-            model.add(Dense(env.get_action_space_size(), activation="linear"))
-            model.compile(loss="mse", optimizer=Adam(lr=0.001), metrics=['accuracy'])
-
-        return model
+            print("ERROR! No model to load!")
 
     def update_replay_memory(self, transition):
         self.replay_memory.append(transition)

@@ -1,5 +1,6 @@
 import random
 import cv2
+import numpy as np
 
 
 class Environment:
@@ -23,8 +24,8 @@ class Environment:
         self.agent_current_reward = 0
         self.total_generated_rewards = 0
         self.game_over = False
-        self.reward_value = 5
-        self.step_cost = -1
+        self.reward_value = 1
+        self.step_cost = -0.025
         self.steps = 0
         self.percent_for_game_over = percent_for_game_over
         self.number_for_game_over = 0
@@ -66,7 +67,7 @@ class Environment:
                 # Generate a number in the range of the pixel at i, j
                 rand = random.randrange(0, self.map_img_agents[i, j, 0])
                 # If the generated number is 0 and pixel i, j is sub 30
-                if (self.map_img_agents[i, j, 0] < self.food_spawn_threshold) & (rand <= 3):  # TODO (rand == 0)
+                if (self.map_img_agents[i, j, 0] < self.food_spawn_threshold) & (rand <= 1):  # TODO (rand == 0)
                     # Set pixel red
                     self.map_img_agents[i, j, 0] = 0
                     self.map_img_agents[i, j, 1] = 255
@@ -93,7 +94,10 @@ class Environment:
         self.sub_map_img = self.map_img_agents[self.agent_x - self.offset:self.agent_x + self.offset + 1,
                            self.agent_y - self.offset:self.agent_y + self.offset + 1, :]
 
-        return self.sub_map_img
+        # Norm to -1, 1
+        sub_map_img_norm = (np.asarray(self.sub_map_img).astype(float) - 128) / 128
+
+        return sub_map_img_norm
 
     '''Getter Function'''
 
@@ -117,7 +121,7 @@ class Environment:
 
     def render_map(self):
         cv2.imshow('MAP', self.map_img_agents)
-        cv2.waitKey(1)
+        cv2.waitKey(100)
 
     # Render the map of the environment each tick
     def render_sub_map(self):
@@ -212,15 +216,18 @@ class Environment:
         self.steps += 1
 
         # Check if number of rewards found is greater then needed for game over
-        if self.number_for_game_over <= self.agent_reward:
-            self.agent_reward += 30
-            self.game_over = True
+        # if self.number_for_game_over <= self.agent_reward:
+        #    self.agent_reward += 30
+        #    self.game_over = True
 
         if self.steps >= self.steps_for_game_over:
             self.game_over = True
 
-        # Crop the sub-map from the map
+        # Crop the sub-map from the mapsub_map_img
         self.sub_map_img = self.map_img_agents[self.agent_x - self.offset:self.agent_x + self.offset + 1,
                            self.agent_y - self.offset:self.agent_y + self.offset + 1, :]
 
-        return self.sub_map_img, self.agent_current_reward, self.game_over
+        # Norm to -1, 1
+        sub_map_img_norm = (np.asarray(self.sub_map_img).astype(float) - 128) / 128
+
+        return sub_map_img_norm, self.agent_current_reward, self.game_over

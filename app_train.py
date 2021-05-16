@@ -15,20 +15,22 @@ import random
 import time
 import os
 
+LOAD_MODEL = None
+
 DISCOUNT = 0.99
 REPLAY_MEMORY_SIZE = 50000  # How many last steps to keep for model training
 MIN_REPLAY_MEMORY_SIZE = 1000  # Minimum number of steps in a memory to start training
 MINIBATCH_SIZE = 64  # How many steps (samples) to use for training
 UPDATE_TARGET_EVERY = 5  # Terminal states (end of episodes)
 MODEL_NAME = '2x256'
-MIN_REWARD = -200  # For model save
+MIN_REWARD = 3  # For model save
 MEMORY_FRACTION = 0.20
 
 # Environment settings
 EPISODES = 20000
 
 #  Stats settings
-AGGREGATE_STATS_EVERY = 50  # episodes
+AGGREGATE_STATS_EVERY = 25  # episodes
 SHOW_PREVIEW = False
 
 
@@ -41,21 +43,21 @@ class ModifiedTensorBoard(TensorBoard):
         self.step = 1
         self.writer = tf.summary.FileWriter(self.log_dir)
 
-    # Overriding this method to stop creating default log writer
+    # Override, to stop creating default log writer
     def set_model(self, model):
         pass
 
-    # Overrided, saves logs with our step number
+    # Override, saves logs with our step number
     # (otherwise every .fit() will start writing from 0th step)
     def on_epoch_end(self, epoch, logs=None):
         self.update_stats(**logs)
 
-    # Overrided
+    # Override
     # We train for one batch only, no need to save anything at epoch end
     def on_batch_end(self, batch, logs=None):
         pass
 
-    # Overrided, so won't close writer
+    # Override, so won't close writer
     def on_train_end(self, _):
         pass
 
@@ -66,6 +68,8 @@ class ModifiedTensorBoard(TensorBoard):
 
 
 class DQNAgent:
+
+    learning_rate = 0.00001
 
     def __init__(self, env):
         # Main model (gets trained every step)
@@ -83,23 +87,30 @@ class DQNAgent:
 
     def create_model(self, env):
 
-        model = Sequential()
+        if LOAD_MODEL is not None:
+            model = load_model(LOAD_MODEL)
+            print("Loaded previous model!")
 
-        model.add(Conv2D(256, (3, 3), input_shape=np.zeros((15, 15, 3)).shape))
-        model.add(Activation("relu"))
-        model.add(MaxPooling2D(2, 2))
-        model.add(Dropout(0.2))
+        else:
+            model = Sequential()
 
-        model.add(Conv2D(256, (3, 3)))
-        model.add(Activation("relu"))
-        model.add(MaxPooling2D(2, 2))
-        model.add(Dropout(0.2))
+            model.add(Conv2D(256, (3, 3), input_shape=np.zeros((15, 15, 3)).shape))
+            model.add(Activation("relu"))
+            model.add(MaxPooling2D(2, 2))
+            model.add(Dropout(0.2))
 
-        model.add(Flatten())
-        model.add(Dense(64))
+            """
+            model.add(Conv2D(256, (3, 3)))
+            model.add(Activation("relu"))
+            model.add(MaxPooling2D(2, 2))
+            model.add(Dropout(0.2))
+            """
+      
+            model.add(Flatten())
+            model.add(Dense(64))
 
-        model.add(Dense(env.get_action_space_size(), activation="linear"))
-        model.compile(loss="mse", optimizer=Adam(lr=0.00001), metrics=['accuracy'])
+            model.add(Dense(env.get_action_space_size(), activation="relu"))
+            model.compile(loss="mse", optimizer=Adam(lr=DQNAgent.learning_rate), metrics=['accuracy'])
 
         return model
 
@@ -159,13 +170,13 @@ def main():
 
     # Exploration settings
     epsilon = 1  # not a constant, going to be decayed
-    EPSILON_DECAY = 0.99975
-    MIN_EPSILON = 0.001
+    EPSILON_DECAY = 0.99985
+    MIN_EPSILON = 0.01
 
     print("Running Training App...")
 
     # For stats
-    ep_rewards = [-200]
+    ep_rewards = [0]
 
     # For more repetitive results
     # random.seed(1)
@@ -177,7 +188,7 @@ def main():
         os.mkdir("models")
 
     # Create Environment
-    env = Environment("data/map_small_edge.jpg", 15, 100, 1, 50)
+    env = Environment("data/map_small_edge.jpg", 15, 255, 100, 25)
 
     agent = DQNAgent(env)
 
@@ -211,12 +222,13 @@ def main():
 
         # Append episode reward to a list and log stats (every given number of episodes)
         ep_rewards.append(episode_reward)
+
         if not episode % AGGREGATE_STATS_EVERY or episode == 1:
             average_reward = sum(ep_rewards[-AGGREGATE_STATS_EVERY:]) / len(ep_rewards[-AGGREGATE_STATS_EVERY:])
             min_reward = min(ep_rewards[-AGGREGATE_STATS_EVERY:])
             max_reward = max(ep_rewards[-AGGREGATE_STATS_EVERY:])
             agent.tensorboard.update_stats(reward_avg=average_reward, reward_min=min_reward, reward_max=max_reward,
-                                           epsilon=epsilon)
+                                           epsilon=epsilon, learning_rate=agent.learning_rate)
 
             # Save model, but only when min reward is greater or equal a set value
             if min_reward >= MIN_REWARD:
