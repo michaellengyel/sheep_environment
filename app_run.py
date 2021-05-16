@@ -8,14 +8,14 @@ from tqdm import tqdm
 
 from collections import deque
 
-from environment import Environment
+from gym.bug_env.environment import Environment
 
 import numpy as np
 import random
 import time
 import os
 
-LOAD_MODEL = "models/2x256_____9.62max____6.80avg____3.48min__1621161884.model"
+LOAD_MODEL = "benchmarked_models/2x256____34.40max___26.53avg___18.00min__1621204339.model"
 
 DISCOUNT = 0.99
 REPLAY_MEMORY_SIZE = 50_000  # How many last steps to keep for model training
@@ -134,7 +134,7 @@ def main():
                       food_spawn_threshold=255,
                       percent_for_game_over=100,
                       steps_for_game_over=100,
-                      wait_key=1,
+                      wait_key=300,
                       render=True)
 
     agent = DQNAgent(env)
