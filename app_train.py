@@ -8,7 +8,7 @@ from tqdm import tqdm
 
 from collections import deque
 
-from environment import Environment
+from gym.bug_env.environment import Environment
 
 import numpy as np
 import random
@@ -31,7 +31,6 @@ EPISODES = 20000
 
 #  Stats settings
 AGGREGATE_STATS_EVERY = 25  # episodes
-SHOW_PREVIEW = False
 
 
 # Own Tensorboard class
@@ -98,13 +97,6 @@ class DQNAgent:
             model.add(Activation("relu"))
             model.add(MaxPooling2D(2, 2))
             model.add(Dropout(0.2))
-
-            """
-            model.add(Conv2D(256, (3, 3)))
-            model.add(Activation("relu"))
-            model.add(MaxPooling2D(2, 2))
-            model.add(Dropout(0.2))
-            """
       
             model.add(Flatten())
             model.add(Dense(64))
@@ -188,7 +180,13 @@ def main():
         os.mkdir("models")
 
     # Create Environment
-    env = Environment("data/map_small_edge.jpg", 15, 255, 100, 25)
+    env = Environment(map_img_path="gym/bug_env/res/map_small_edge.jpg",
+                      fov=15,
+                      food_spawn_threshold=255,
+                      percent_for_game_over=100,
+                      steps_for_game_over=100,
+                      wait_key=1,
+                      render=True)
 
     agent = DQNAgent(env)
 
@@ -210,9 +208,9 @@ def main():
             new_state, reward, done = env.step(action)
             episode_reward += reward
 
-            if SHOW_PREVIEW and not episode % 1:
-                env.render_map()
-                env.render_sub_map()
+            # Render
+            env.render_map()
+            env.render_sub_map()
 
             agent.update_replay_memory((current_state, action, reward, new_state, done))
             agent.train(done, step)

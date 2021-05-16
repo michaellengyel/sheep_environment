@@ -129,7 +129,13 @@ def main():
         os.mkdir("models")
 
     # Create Environment
-    env = Environment("data/map_small_edge.jpg", 15, 100, 100, 200)
+    env = Environment(map_img_path="gym/bug_env/res/map_small_edge.jpg",
+                      fov=15,
+                      food_spawn_threshold=255,
+                      percent_for_game_over=100,
+                      steps_for_game_over=100,
+                      wait_key=1,
+                      render=True)
 
     agent = DQNAgent(env)
 
